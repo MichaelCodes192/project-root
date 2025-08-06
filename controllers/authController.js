@@ -116,6 +116,10 @@ exports.verifyEmail = async (req, res) => {
 // Login page
 exports.getLogin = (req, res) => {
   res.render('auth/login');
+  user.activity.lastLogin = new Date();
+user.activity.loginCount = (user.activity.loginCount || 0) + 1;
+await user.save();
+
 };
 
 // Handle login
