@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
+const { addNotification } = require('../utils/notifications');
+
+// After user authenticated and session set:
+await addNotification(user._id, 'You logged in successfully!');
+
 const { validationResult } = require('express-validator');
 
 // Setup nodemailer transporter (Gmail SMTP)
