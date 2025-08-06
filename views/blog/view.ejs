@@ -1,0 +1,10 @@
+<h1><%= post.title %></h1>
+<p><%= post.body %></p>
+<p>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></p>
+
+<% if (user && user.id === post.author.id.toString()) { %>
+  <a href="/blog/<%= post._id %>/edit">Edit</a>
+  <form action="/blog/<%= post._id %>/delete" method="POST" style="display:inline;">
+    <button type="submit">Delete</button>
+  </form>
+<% } %>
