@@ -115,7 +115,9 @@ const profileRoutes = require('./routes/profile');
 const blogRoutes = require('./routes/blog');
 const adminRoutes = require('./routes/admin');
 const contactRoutes = require('./routes/contact');
+const chatRoutes = require('./routes/chat');
 
+app.use('/chat', chatRoutes);
 app.use('/contact', contactRoutes);
 app.use('/admin', adminRoutes);
 app.use('/profile', profileRoutes);
@@ -143,6 +145,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+server.listen(process.env.PORT || 3000, () => {
+  console.log('Server started on port 3000');
+});
