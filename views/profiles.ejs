@@ -1,0 +1,8 @@
+<h2>Activity Stats</h2>
+<ul>
+  <li>👤 Member since: <%= new Date(user.activity.createdAt).toLocaleDateString() %></li>
+  <li>🕓 Last login: <%= new Date(user.activity.lastLogin).toLocaleString() %></li>
+  <li>🔑 Logins: <%= user.activity.loginCount %></li>
+  <li>✍️ Blog posts: <%= user.activity.blogPosts %></li>
+  <li>💬 Messages sent: <%= user.activity.messagesSent %></li>
+</ul>
