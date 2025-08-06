@@ -1,0 +1,16 @@
+<h1>Your Notifications</h1>
+<button id="mark-read">Mark All as Read</button>
+<ul>
+  <% notifications.forEach(n => { %>
+    <li style="background-color: <%= n.read ? '#eee' : '#cfc' %>;">
+      <%= n.message %> — <small><%= new Date(n.createdAt).toLocaleString() %></small>
+    </li>
+  <% }) %>
+</ul>
+
+<script>
+  document.getElementById('mark-read').addEventListener('click', async () => {
+    await fetch('/notifications/mark-read', { method: 'POST' });
+    location.reload();
+  });
+</script>
