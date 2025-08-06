@@ -5,3 +5,7 @@
 <% } else { %>
   <a href="/login">Login</a>
 <% } %>
+<% if (user?.isAdmin) { %>
+  <a href="/admin">Admin</a>
+<% } %>
+
