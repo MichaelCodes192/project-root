@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Setup Two-Factor Authentication</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container auth-container">
+    <h1>Setup Two-Factor Authentication</h1>
+
+    <p>Scan the QR code below with your authenticator app (e.g., Google Authenticator, Authy):</p>
+    <img src="<%= qrDataUrl %>" alt="2FA QR Code" />
+
+    <form action="/2fa/verify" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <label for="token">Enter the code from your app:</label>
+      <input type="text" id="token" name="token" required maxlength="6" pattern="[0-9]{6}" />
+
+      <button type="submit">Verify & Enable 2FA</button>
+    </form>
+  </div>
+</body>
+</html>
