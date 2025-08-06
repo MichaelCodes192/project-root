@@ -1,0 +1,36 @@
+<h1>Live Chat</h1>
+
+<div id="chat-box" style="border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll;">
+  <% messages.forEach(msg => { %>
+    <p><strong><%= msg.sender.username %></strong>: <%= msg.text %> <small><%= new Date(msg.createdAt).toLocaleTimeString() %></small></p>
+  <% }) %>
+</div>
+
+<form id="chat-form">
+  <input type="text" id="message-input" autocomplete="off" placeholder="Type a message" required />
+  <button type="submit">Send</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('message-input');
+  const chatBox = document.getElementById('chat-box');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const msg = input.value;
+    if (msg.trim() !== '') {
+      socket.emit('chatMessage', msg);
+      input.value = '';
+    }
+  });
+
+  socket.on('message', (data) => {
+    const p = document.createElement('p');
+    p.innerHTML = `<strong>${data.username}</strong>: ${data.text} <small>${new Date(data.time).toLocaleTimeString()}</small>`;
+    chatBox.appendChild(p);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+</script>
