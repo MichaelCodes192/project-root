@@ -73,7 +73,9 @@ const dashboardRoutes = require('./routes/dashboard');
 const blogRoutes = require('./routes/blog');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
+const profileRoutes = require('./routes/profile');
 
+app.use('/profile', profileRoutes);
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/blog', blogRoutes);
