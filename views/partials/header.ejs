@@ -1,0 +1,7 @@
+<a href="/">Home</a>
+<a href="/blog">Blog</a>
+<% if (user) { %>
+  <a href="/dashboard">Dashboard</a>
+<% } else { %>
+  <a href="/login">Login</a>
+<% } %>
