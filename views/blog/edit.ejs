@@ -1,0 +1,6 @@
+<h1>Edit Post</h1>
+<form action="/blog/<%= post._id %>/edit" method="POST">
+  <input name="title" value="<%= post.title %>" required>
+  <textarea name="body" rows="10" required><%= post.body %></textarea>
+  <button type="submit">Update</button>
+</form>
