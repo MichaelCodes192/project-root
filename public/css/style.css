@@ -22,3 +22,26 @@ body {
 a {
   color: var(--link-color);
 }
+
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#cookie {
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+#cookie:active {
+  transform: scale(0.95);
+}
+
+#score {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}
+
