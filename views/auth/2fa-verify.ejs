@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verify Two-Factor Authentication</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container auth-container">
+    <h1>Enter your 2FA Code</h1>
+
+    <% if (error && error.length > 0) { %>
+      <div class="flash error"><%= error %></div>
+    <% } %>
+
+    <form action="/2fa/verify" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <label for="token">Authentication code:</label>
+      <input type="text" id="token" name="token" required maxlength="6" pattern="[0-9]{6}" />
+
+      <button type="submit">Verify</button>
+    </form>
+  </div>
+</body>
+</html>
