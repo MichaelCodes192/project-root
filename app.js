@@ -12,6 +12,34 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const http = require('http');
+const http = require('http');
+const { Server } = require('socket.io');
+const Message = require('./models/Message');
+const User = require('./models/User');
+const server = http.createServer(app);
+const io = new Server(server);
+
+// Socket.io logic
+io.on('connection', (socket) => {
+  console.log('New user connected');
+
+  socket.on('chatMessage', async (msg) => {
+    const userId = socket.handshake.auth.userId;
+    const user = await User.findById(userId);
+
+    if (!user) return;
+
+    const message = new Message({ sender: user._id, text: msg });
+    await message.save();
+
+    io.emit('message', {
+      username: user.username,
+      text: msg,
+      time: message.createdAt,
+    });
+  });
+});
+
 
 const app = express();
 const server = http.createServer(app);
