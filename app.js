@@ -116,7 +116,9 @@ const blogRoutes = require('./routes/blog');
 const adminRoutes = require('./routes/admin');
 const contactRoutes = require('./routes/contact');
 const chatRoutes = require('./routes/chat');
+const notificationRoutes = require('./routes/notifications');
 
+app.use('/notifications', notificationRoutes);
 app.use('/chat', chatRoutes);
 app.use('/contact', contactRoutes);
 app.use('/admin', adminRoutes);
