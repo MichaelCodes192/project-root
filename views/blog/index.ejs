@@ -1,0 +1,12 @@
+<h1>Blog Posts</h1>
+<% if (user) { %>
+  <a href="/blog/new">+ New Post</a>
+<% } %>
+
+<ul>
+  <% posts.forEach(post => { %>
+    <li>
+      <a href="/blog/<%= post._id %>"><%= post.title %></a> by <%= post.author.username %>
+    </li>
+  <% }) %>
+</ul>
