@@ -1,0 +1,8 @@
+<h1>Contact Form Submissions</h1>
+<ul>
+  <% contacts.forEach(c => { %>
+    <li>
+      <strong><%= c.name %> (<%= c.email %>)</strong>: <%= c.message %>
+    </li>
+  <% }) %>
+</ul>
