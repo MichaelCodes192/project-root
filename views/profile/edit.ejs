@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <nav>
+    <a href="/dashboard">Dashboard</a> |
+    <form style="display:inline" method="POST" action="/logout">
+      <button type="submit">Logout</button>
+    </form>
+  </nav>
+
+  <main class="container">
+    <h1>Edit Profile</h1>
+
+    <% if (error && error.length > 0) { %>
+      <div class="flash error"><%= error %></div>
+    <% } %>
+    <% if (success && success.length > 0) { %>
+      <div class="flash success"><%= success %></div>
+    <% } %>
+
+    <form action="/profile/edit" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="<%= user.username %>" required />
+
+      <label for="bio">Bio</label>
+      <textarea id="bio" name="bio" rows="4"><%= user.bio %></textarea>
+
+      <button type="submit">Save Changes</button>
+    </form>
+
+    <form action="/profile/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone!');">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <button type="submit" class="danger">Delete Account</button>
+    </form>
+  </main>
+</body>
+</html>
