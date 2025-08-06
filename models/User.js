@@ -55,5 +55,14 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+notifications: [
+  {
+    message: String,
+    createdAt: { type: Date, default: Date.now },
+    read: { type: Boolean, default: false }
+  }
+],
+
+
 module.exports = mongoose.model('User', userSchema);
 
