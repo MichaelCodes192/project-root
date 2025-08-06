@@ -74,6 +74,8 @@ const blogRoutes = require('./routes/blog');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const profileRoutes = require('./routes/profile');
+const blogRoutes = require('./routes/blog');
+
 
 app.use('/profile', profileRoutes);
 app.use('/', authRoutes);
@@ -81,6 +83,8 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/blog', blogRoutes);
 app.use('/contact', contactRoutes);
 app.use('/admin', adminRoutes);
+app.use('/blog', blogRoutes);
+
 
 app.get('/', (req, res) => {
   res.render('home');
