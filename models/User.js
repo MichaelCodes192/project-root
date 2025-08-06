@@ -53,6 +53,15 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  activity: {
+  lastLogin: { type: Date },
+  loginCount: { type: Number, default: 0 },
+  blogPosts: { type: Number, default: 0 },
+  messagesSent: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now }
+},
+
 });
 
 notifications: [
@@ -62,6 +71,8 @@ notifications: [
     read: { type: Boolean, default: false }
   }
 ],
+
+
 
 
 module.exports = mongoose.model('User', userSchema);
