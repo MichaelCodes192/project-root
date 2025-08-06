@@ -63,6 +63,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(flash());
+io.use((socket, next) => {
+  const session = socket.request.session;
+  if (session && session.user && session.user._id) {
+    socket.handshake.auth = { userId: session.user._id };
+    next();
+  } else {
+    next(new Error("Not authenticated"));
+  }
+});
+
 
 // Rate limiting
 const limiter = rateLimit({
