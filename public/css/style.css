@@ -1,0 +1,24 @@
+/* Base (light) */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+  --link-color: #007bff;
+}
+
+/* Dark theme overrides */
+html[data-theme='dark'] {
+  --bg-color: #111111;
+  --text-color: #ffffff;
+  --link-color: #66d9ef;
+}
+
+/* Use CSS variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  color: var(--link-color);
+}
