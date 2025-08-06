@@ -76,7 +76,9 @@ const adminRoutes = require('./routes/admin');
 const profileRoutes = require('./routes/profile');
 const blogRoutes = require('./routes/blog');
 const adminRoutes = require('./routes/admin');
+const contactRoutes = require('./routes/contact');
 
+app.use('/contact', contactRoutes);
 app.use('/admin', adminRoutes);
 app.use('/profile', profileRoutes);
 app.use('/', authRoutes);
