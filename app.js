@@ -117,7 +117,9 @@ const adminRoutes = require('./routes/admin');
 const contactRoutes = require('./routes/contact');
 const chatRoutes = require('./routes/chat');
 const notificationRoutes = require('./routes/notifications');
+const apiRoutes = require('./routes/api');
 
+app.use('/api', apiRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/chat', chatRoutes);
 app.use('/contact', contactRoutes);
