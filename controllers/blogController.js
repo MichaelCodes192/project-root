@@ -52,3 +52,9 @@ exports.deletePost = async (req, res) => {
   await post.remove();
   res.redirect('/blog');
 };
+
+await Blog.create({ title, content, author: req.session.user.id });
+await User.findByIdAndUpdate(req.session.user.id, {
+  $inc: { 'activity.blogPosts': 1 }
+});
+
