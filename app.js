@@ -12,16 +12,19 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 
-// ==== Database Connection ====
+// ==== Connect to MongoDB ====
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+}).then(() => {
+  console.log('✅ MongoDB connected');
+}).catch(err => {
+  console.error('❌ MongoDB connection error:', err);
+});
 
 // ==== Middleware ====
 app.use(helmet());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,24 +39,24 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ==== Sessions ====
+// ==== Session Configuration ====
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'secret123',
+  secret: process.env.SESSION_SECRET || 'fallback_secret',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
   cookie: {
-    secure: false, // change to true if using HTTPS
+    secure: false, // Set to true in production with HTTPS
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
 
-// ==== Flash & CSRF ====
+// ==== Flash & CSRF Protection ====
 app.use(flash());
 app.use(csrf({ cookie: true }));
 
-// ==== Global Variables ====
+// ==== Global Template Variables ====
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.csrfToken = req.csrfToken();
@@ -77,17 +80,18 @@ app.use('/admin', adminRoutes);
 app.use('/contact', contactRoutes);
 app.use('/chat', chatRoutes);
 
-// ==== Home & 404 ====
+// ==== Home Route ====
 app.get('/', (req, res) => {
   res.render('home');
 });
 
+// ==== 404 Page ====
 app.use((req, res) => {
   res.status(404).render('404');
 });
 
-// ==== Server ====
+// ==== Start Server ====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
