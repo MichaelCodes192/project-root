@@ -1,113 +1,93 @@
-// app.js
 require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const mongoose = require('mongoose');
 const flash = require('connect-flash');
-const passport = require('passport');
 const csrf = require('csurf');
-const path = require('path');
-const http = require('http');
-const socketio = require('socket.io');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+const path = require('path');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
-// Load Passport strategy
-require('./config/passport')(passport);
-
-// Initialize app and server
 const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-app.set('io', io); // Share io instance across app
 
-// Connect to MongoDB
+// ==== Database Connection ====
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 }).then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ Mongo error:', err));
+  .catch(err => console.error('❌ MongoDB error:', err));
 
-// Security middleware
+// ==== Middleware ====
 app.use(helmet());
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, try again later.'
-}));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-
-// Static files
 app.use(express.static(path.join(__dirname, 'public')));
-
-// EJS templates
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Sessions
+// ==== Rate Limiting ====
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use(limiter);
+
+// ==== Sessions ====
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'secret123',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
   cookie: {
+    secure: false, // change to true if using HTTPS
     httpOnly: true,
-    secure: false, // set to true in production with HTTPS
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
 
-// CSRF protection
+// ==== Flash & CSRF ====
+app.use(flash());
 app.use(csrf({ cookie: true }));
 
-// Flash messages
-app.use(flash());
-
-// Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Global template variables
+// ==== Global Variables ====
 app.use((req, res, next) => {
-  res.locals.user = req.user || null;
+  res.locals.user = req.session.user || null;
   res.locals.csrfToken = req.csrfToken();
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
+  res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
 });
 
-// Routes
-app.use('/', require('./routes/index'));
-app.use('/auth', require('./routes/auth'));
-app.use('/dashboard', require('./routes/dashboard'));
-app.use('/blog', require('./routes/blog'));
-app.use('/admin', require('./routes/admin'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/activity', require('./routes/activity'));
+// ==== Routes ====
+const authRoutes = require('./routes/auth');
+const blogRoutes = require('./routes/blog');
+const dashboardRoutes = require('./routes/dashboard');
+const adminRoutes = require('./routes/admin');
+const contactRoutes = require('./routes/contact');
+const chatRoutes = require('./routes/chat');
 
-// Catch 404
+app.use('/', authRoutes);
+app.use('/blog', blogRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use('/admin', adminRoutes);
+app.use('/contact', contactRoutes);
+app.use('/chat', chatRoutes);
+
+// ==== Home & 404 ====
+app.get('/', (req, res) => {
+  res.render('home');
+});
+
 app.use((req, res) => {
   res.status(404).render('404');
 });
 
-// Socket.io (basic chat example)
-io.on('connection', socket => {
-  console.log('🟢 New Socket.io connection');
-
-  socket.on('chatMessage', msg => {
-    io.emit('chatMessage', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('🔴 Socket disconnected');
-  });
-});
-
-// Start server
+// ==== Server ====
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
