@@ -2,7 +2,7 @@
 
 Welcome to my page! Here I will create thing such as blogs and alot of other different topics.
 This will include games, chats, and tons of fun! 😃🖥️💿💵🔌💡🪩
-Copyright (C) Michael Kang 2025 OG 🥇✅🤫👍😅
+Copyright (C) Michael Joo 2025 OG 🥇✅🤫👍😅
 
 # Updates
 
